@@ -40,7 +40,7 @@ ITEM_SCHEMA = {
             "type": "array",
             "items": {
                 "type": "string",
-                "enum": ["casual", "formal", "sporty", "boho", "street", "smart-casual", "elegant", "vintage"]
+                "enum": ["casual", "formal", "sporty", "boho", "street", "smart-casual", "elegant", "vintage", "minimalist", "professional", "romantic"]
             },
             "description": "Style categories"
         },
@@ -366,7 +366,17 @@ RECOMMENDATION_REQUEST_SCHEMA = {
     "required": ["user_id", "weather", "occasion"],
     "properties": {
         "user_id": {"type": "string"},
-        "weather": {"$ref": "#/definitions/WeatherContext"},
+        "weather": {
+            "type": "object",
+            "required": ["temp_c", "condition"],
+            "properties": {
+                "temp_c": {"type": "integer"},
+                "humidity": {"type": "integer", "minimum": 0, "maximum": 100},
+                "condition": {"type": "string"},
+                "uv_index": {"type": "number"},
+                "wind_speed_kmh": {"type": "number"}
+            }
+        },
         "occasion": {
             "type": "array",
             "items": {"type": "string"}
@@ -375,33 +385,15 @@ RECOMMENDATION_REQUEST_SCHEMA = {
             "type": "object",
             "properties": {
                 "styles": {"type": "array", "items": {"type": "string"}},
-                "colors": {"type": "array", "items": {"type": "string"}}
+                "colors": {"type": "array", "items": {"type": "string"}},
+                "avoid": {"type": "array", "items": {"type": "string"}}
             }
         },
-        "palette_analysis": {
-            "type": "object"
-        },
-        "demographics": {
-            "type": "object"
-        },
-        "last_worn_history": {
-            "type": "array",
-            "items": {"type": "string"}
-        },
-        "top_n": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 10,
-            "default": 3
-        },
-        "use_llm": {
-            "type": "boolean",
-            "default": False,
-            "description": "Enable LLM-powered explanations"
-        }
-    },
-    "definitions": {
-        "WeatherContext": WEATHER_CONTEXT_SCHEMA
+        "palette_analysis": {"type": "object"},
+        "demographics": {"type": "object"},
+        "last_worn_history": {"type": "array", "items": {"type": "string"}},
+        "top_n": {"type": "integer", "minimum": 1, "maximum": 10, "default": 3},
+        "use_llm": {"type": "boolean", "default": False}
     }
 }
 
@@ -409,53 +401,68 @@ RECOMMENDATION_REQUEST_SCHEMA = {
 RECOMMENDATION_RESPONSE_SCHEMA = {
     "title": "RecommendationResponse",
     "type": "object",
-    "required": ["request_id", "user_id", "timestamp", "recommendations"],
+    "required": ["status", "timestamp", "recommended_outfits"],
     "properties": {
-        "request_id": {
+        "status": {
             "type": "string",
-            "description": "Unique request identifier for tracking"
+            "enum": ["success", "partial", "error"],
+            "description": "Response status"
         },
-        "user_id": {"type": "string"},
         "timestamp": {
             "type": "string",
-            "format": "date-time"
+            "description": "ISO format timestamp"
         },
-        "context_summary": {
-            "type": "object",
-            "description": "Echo of request context for validation"
-        },
-        "recommendations": {
+        "recommended_outfits": {
             "type": "array",
-            "minItems": 1,
-            "items": {"$ref": "#/definitions/OutfitRecommendation"}
-        },
-        "metadata": {
-            "type": "object",
-            "properties": {
-                "retrieval_time_ms": {"type": "number"},
-                "ranking_time_ms": {"type": "number"},
-                "llm_time_ms": {"type": "number"},
-                "total_time_ms": {"type": "number"},
-                "candidates_retrieved": {"type": "integer"},
-                "candidates_assembled": {"type": "integer"},
-                "llm_model": {"type": "string"},
-                "ranking_model": {"type": "string"},
-                "embedding_model": {"type": "string"}
+            "description": "List of outfit recommendations",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "rank": {"type": "integer", "minimum": 1},
+                    "score": {"type": "number", "minimum": 0, "maximum": 1},
+                    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "top": {"type": "string"},
+                            "bottom": {"type": "string"},
+                            "shoes": {"type": "string"}
+                        }
+                    },
+                    "colors": {
+                        "type": "object",
+                        "properties": {
+                            "primary": {"type": "string"},
+                            "secondary": {"type": "string"}
+                        }
+                    },
+                    "explanation": {"type": "string"},
+                    "accessories": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "type": {"type": "string"},
+                                "color": {"type": "string"},
+                                "suggestion": {"type": "string"}
+                            }
+                        }
+                    },
+                    "metadata": {
+                        "type": "object",
+                        "properties": {
+                            "style": {"type": "string"},
+                            "occasion_fit": {"type": "string"},
+                            "weather_fit": {"type": "string"}
+                        }
+                    }
+                }
             }
         },
-        "exposure_control": {
-            "type": "object",
-            "description": "Diversity and exploration parameters",
-            "properties": {
-                "max_recs": {"type": "integer"},
-                "diversity_penalty": {"type": "number"},
-                "freshness_weight": {"type": "number"}
-            }
+        "next_steps": {
+            "type": "array",
+            "items": {"type": "string"}
         }
-    },
-    "definitions": {
-        "OutfitRecommendation": OUTFIT_RECOMMENDATION_SCHEMA,
-        "WeatherContext": WEATHER_CONTEXT_SCHEMA
     }
 }
 

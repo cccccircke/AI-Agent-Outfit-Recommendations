@@ -208,7 +208,7 @@ def run_integration_test(
     print("\n[VALIDATION] Checking output format...")
     
     # Validate recommendation response schema
-    is_valid, error = validate_schema(step4_output, "RECOMMENDATION_RESPONSE")
+    is_valid, error = validate_schema(step4_output, "recommendation_response")
     if is_valid:
         print("   ✓ Step 4 output matches expected schema")
     else:
