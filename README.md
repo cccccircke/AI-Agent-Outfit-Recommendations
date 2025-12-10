@@ -33,6 +33,23 @@ python -m src.data
 python -m src.index
 ```
 
+### Embeddings and model compatibility
+
+- If you have `outfit_embeddings.npy`, ensure you initialize the catalog loader with a matching `model_name` or allow auto-detection.
+- Example: the repository example `src/outfit_embeddings.npy` uses `distiluse-base-multilingual-cased-v2` (512-dim). To enable embedding-based search:
+
+```python
+from src.data_loader import CatalogLoader
+# Option 1: pass the correct model_name explicitly
+loader = CatalogLoader(catalog_path='items.json', embeddings_path='src/outfit_embeddings.npy', model_name='distiluse-base-multilingual-cased-v2')
+
+# Option 2: allow auto-detection (CatalogLoader will try common models)
+loader = CatalogLoader(catalog_path='items.json', embeddings_path='src/outfit_embeddings.npy')
+```
+
+If dimensions do not match, `CatalogLoader` will automatically fallback to keyword-based search and print a warning. See `INPUT_OUTPUT_SPEC.md` for details on regenerating embeddings with a compatible model.
+
+
 ### 3. Train ranking model (creates `model.joblib`):
 
 ```bash
@@ -176,6 +193,70 @@ python src/context_generator.py
 - Deploy as REST API (FastAPI/Flask) for frontend integration
 - Implement caching layer (Redis) for frequently-requested contexts
 
+## 🎯 Input/Output Specification (NEW)
+
+### For Integration with Other Steps
+
+This project now includes comprehensive **Input/Output specifications** for seamless integration:
+
+**📖 Documentation**:
+- **`INPUT_OUTPUT_SPEC.md`** ⭐⭐⭐ - Complete data format specifications
+- **`QUICK_START.md`** - 30-second overview for developers
+- **`IMPLEMENTATION_SUMMARY.md`** - Technical implementation details
+
+**📥 INPUT (from Person 2 - Context Collector)**:
+```json
+{
+  "user_query": "週末要去海邊參加婚禮",
+  "weather": {"temperature_c": 28, "condition": "Sunny"},
+  "user_profile": {
+    "personal_color": "Summer Soft",
+    "color_preferences": ["淡藍", "米色"],
+    "style_preferences": ["優雅", "浪漫"],
+    "body_type": "Hourglass"
+  },
+  "occasion": {"type": "海邊婚禮", "formality": "半正式"}
+}
+```
+
+**📤 OUTPUT (for Person 4 - Virtual Try-On Presenter)**:
+```json
+{
+  "selected_outfit_filename": "12.jpg",
+  "selected_outfit_id": "outfit_12",
+  "reasoning": "這件淡藍色雪紡洋裝非常適合海邊婚禮...",
+  "vton_prompt": "A photorealistic image of an elegant woman wearing a light blue chiffon dress...",
+  "negative_prompt": "ugly, distorted, blurry...",
+  "confidence_score": 0.87,
+  "fashion_notes": "完美詮釋Summer Soft色彩季型...",
+  "generated_at": "2025-12-10T12:39:28"
+}
+```
+
+### New Modules
+
+- **`src/mock_context.py`** - Mock data for Person 2 (Context Collector)
+- **`src/data_loader.py`** (Enhanced) - CatalogLoader with semantic search
+- **`src/recommend_interface.py`** (New) - Complete Retrieve→Reason→Decide pipeline
+- **`src/integration_example.py`** - Full end-to-end demonstration
+
+### Quick Demo
+
+```bash
+# Show complete input/output formats
+python src/integration_example.py
+
+# Run recommendation with mock data
+python src/recommend_interface.py beach_wedding
+
+# Use as library
+python -c "
+from src.recommend_interface import main_recommend
+result = main_recommend('beach_wedding')
+print(result)
+"
+```
+
 ## Notes
 
 - LLM calls require internet connection and active OpenAI account
@@ -183,6 +264,12 @@ python src/context_generator.py
 - Model training uses synthetic data; production should use real labeled examples
 - FAISS CPU version included; for GPU support, install `faiss-gpu` instead
 
+---
 
-# AI-Agent-Outfit-Recommendations
-The Outfit Planner represents the pivotal reasoning engine of the AI fashion assistant, designed to autonomously bridge the gap between a user's abstract intent and the concrete inventory established in the Catalog Builder. 
+**Latest Updates (2025-12-10)**:
+- ✅ Complete Input/Output specification defined
+- ✅ Mock Context module for Person 2 simulation
+- ✅ Enhanced CatalogLoader with embedding-based search
+- ✅ Core recommendation interface (Retrieve→Reason→Decide)
+- ✅ VTON prompt generation for virtual try-on
+- ✅ Full integration examples and documentation 
