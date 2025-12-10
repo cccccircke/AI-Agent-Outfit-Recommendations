@@ -1,0 +1,51 @@
+{
+  "description": "Example LLM prompt templates used in outfit recommendation system",
+  "prompts": {
+    "explain_outfit": {
+      "template": "You are a professional fashion stylist. Given an outfit recommendation, provide a brief, engaging explanation in Traditional Chinese.\n\nOutfit items:\n{items}\n\nUser context:\n- Occasion: {occasion}\n- Weather: {weather}\n- Preferred styles: {user_style}\n- Primary reason: {reason}\n\nProvide 2-3 short bullet points (each under 20 words) explaining why this outfit is perfect for the user. Format as:\n• [reason 1]\n• [reason 2]\n• [optional accessory suggestion]\n\nOutput in Traditional Chinese.",
+      "example_input": {
+        "items": "- TOP: white cotton top (white, casual)\n- BOTTOM: khaki linen pants (khaki, casual)\n- SHOES: beige leather slip-on (beige, casual)",
+        "occasion": "coffee_date",
+        "weather": "22°C, sunny, humidity 60%",
+        "user_style": "casual, smart-casual",
+        "reason": "comfort and style"
+      },
+      "example_output": "• 簡潔俐落的白色上衣搭配卡其褲，展現都市休閒風格\n• 中性配色搭配你偏好的休閒風，適合輕鬆咖啡約會\n• 搭配棕色皮質腰帶和金色簡約手錶更顯品味"
+    },
+    "accessory_suggestion": {
+      "template": "As a fashion expert, suggest 2-3 accessory items (bag, shoes, jewelry, scarf, belt) to complete this outfit.\n\nBase outfit colors: Top={top_color}, Bottom={bottom_color}\nOccasion: {occasion}\nStyle preference: {style}\n\nReturn ONLY a JSON array like:\n[\"item1\", \"item2\", \"item3\"]\n\nBe specific (e.g., \"棕色皮帶\" instead of just \"belt\").",
+      "example_input": {
+        "top_color": "white",
+        "bottom_color": "navy",
+        "occasion": "office",
+        "style": "smart-casual"
+      },
+      "example_output": "[\"棕色皮帶\", \"黑色樂福鞋\", \"金色手錶\"]"
+    },
+    "style_validation": {
+      "template": "Check if the given outfit items match the requested styles.\n\nRequested styles: {styles}\nOutfit items:\n{items}\n\nRespond with a JSON object:\n{{\"matches\": true/false, \"confidence\": 0.0-1.0, \"explanation\": \"...\"}}\n\nRespond ONLY with valid JSON, no markdown.",
+      "example_input": {
+        "styles": "casual, boho",
+        "items": "- White linen blouse\n- Beige linen pants\n- Brown leather sandals"
+      },
+      "example_output": "{\"matches\": true, \"confidence\": 0.9, \"explanation\": \"The outfit perfectly embodies boho-casual aesthetic with natural materials and earthy tones\"}"
+    },
+    "weather_check": {
+      "template": "Assess if this outfit is suitable for the given weather conditions.\n\nWeather: {temp_c}°C, humidity {humidity}%, {condition}\nOutfit items:\n{items}\n\nReturn JSON:\n{{\"suitable\": true/false, \"score\": 0.0-1.0, \"adjustment\": \"...\"}}\n\nRespond ONLY with valid JSON.",
+      "example_input": {
+        "temp_c": 18,
+        "humidity": 65,
+        "condition": "rainy",
+        "items": "- Cotton long-sleeve shirt\n- Wool trousers\n- Waterproof boots"
+      },
+      "example_output": "{\"suitable\": true, \"score\": 0.95, \"adjustment\": \"Consider adding a rain jacket or umbrella\"}"
+    },
+    "color_harmony": {
+      "template": "Evaluate the color harmony of this outfit.\n\nColors: {colors}\n\nRate the color harmony and provide brief styling notes.\nReturn JSON:\n{{\"harmony_score\": 0.0-1.0, \"notes\": \"...\"}}\n\nRespond ONLY with valid JSON.",
+      "example_input": {
+        "colors": "white, navy, brown"
+      },
+      "example_output": "{\"harmony_score\": 0.92, \"notes\": \"Classic and timeless combination. Navy and brown complement white perfectly for a sophisticated look.\"}"
+    }
+  }
+}

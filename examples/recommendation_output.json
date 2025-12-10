@@ -1,0 +1,208 @@
+{
+  "request_id": "demo-001",
+  "user_id": "user_demo",
+  "timestamp": "2025-12-10T09:00:00Z",
+  "context_summary": {
+    "temp_c": 22,
+    "condition": "sunny",
+    "humidity": 60,
+    "occasion": ["casual_coffee"],
+    "preferences": {
+      "styles": ["casual", "smart-casual"],
+      "colors": ["white", "navy"]
+    }
+  },
+  "recommendations": [
+    {
+      "rank": 1,
+      "outfit_id": "outfit_123_a",
+      "overall_score": 0.92,
+      "confidence": 0.88,
+      "items": [
+        {
+          "role": "top",
+          "item_id": "item_42",
+          "title": "白色棉質短袖襯衫",
+          "color": "white",
+          "style": "casual",
+          "material": "cotton",
+          "match_score": 0.95,
+          "image_url": "https://example.com/item_42.jpg"
+        },
+        {
+          "role": "bottom",
+          "item_id": "item_67",
+          "title": "卡其色亞麻褲",
+          "color": "khaki",
+          "style": "casual",
+          "material": "linen",
+          "match_score": 0.90,
+          "image_url": "https://example.com/item_67.jpg"
+        },
+        {
+          "role": "shoes",
+          "item_id": "item_89",
+          "title": "米色皮質樂福鞋",
+          "color": "beige",
+          "style": "casual",
+          "material": "leather",
+          "match_score": 0.88,
+          "image_url": "https://example.com/item_89.jpg"
+        }
+      ],
+      "suitability": {
+        "temp_ok": true,
+        "weather_ok": true,
+        "occasion_ok": true,
+        "weather_explanation": "棉麻混紡材質透氣性佳，適合 22°C 溫和天氣"
+      },
+      "reasons": [
+        "• 簡潔白色襯衫搭配中性卡其褲，展現都市休閒風格",
+        "• 全身色彩偏淡，清爽適合陽光咖啡約會",
+        "• 布料輕薄透氣，完美應對春夏季節"
+      ],
+      "accessory_suggestions": [
+        "棕色皮質腰帶",
+        "金色簡約手錶",
+        "淺色帆布包包"
+      ],
+      "color_harmony": {
+        "harmony_score": 0.92,
+        "notes": "白色主調搭配卡其和米色形成溫暖中性的配色，視覺上舒適自然"
+      },
+      "visual_preview_url": "https://example.com/preview/outfit_123_a.png"
+    },
+    {
+      "rank": 2,
+      "outfit_id": "outfit_123_b",
+      "overall_score": 0.84,
+      "confidence": 0.82,
+      "items": [
+        {
+          "role": "top",
+          "item_id": "item_51",
+          "title": "軍綠色棉質針織上衣",
+          "color": "olive",
+          "style": "casual",
+          "material": "cotton",
+          "match_score": 0.85,
+          "image_url": "https://example.com/item_51.jpg"
+        },
+        {
+          "role": "bottom",
+          "item_id": "item_72",
+          "title": "深藍色牛仔褲",
+          "color": "navy",
+          "style": "casual",
+          "material": "denim",
+          "match_score": 0.88,
+          "image_url": "https://example.com/item_72.jpg"
+        },
+        {
+          "role": "shoes",
+          "item_id": "item_94",
+          "title": "棕色休閒帆布鞋",
+          "color": "brown",
+          "style": "casual",
+          "material": "canvas",
+          "match_score": 0.80,
+          "image_url": "https://example.com/item_94.jpg"
+        }
+      ],
+      "suitability": {
+        "temp_ok": true,
+        "weather_ok": true,
+        "occasion_ok": true,
+        "weather_explanation": "針織上衣提供適度保暖，牛仔褲耐久實穿"
+      },
+      "reasons": [
+        "• 軍綠色上衣帶有高級感，與深藍牛仔褲形成色彩對比",
+        "• 風格偏向街頭休閒，適合輕鬆自在的約會氛圍",
+        "• 棉質+牛仔布搭配，質地層次豐富且耐穿"
+      ],
+      "accessory_suggestions": [
+        "棕色皮帶",
+        "黑色簡約手錶",
+        "帆布斜背包"
+      ],
+      "color_harmony": {
+        "harmony_score": 0.85,
+        "notes": "軍綠與深藍的冷色調搭配穩重，棕色鞋款提供暖色平衡，整體和諧"
+      },
+      "visual_preview_url": "https://example.com/preview/outfit_123_b.png"
+    },
+    {
+      "rank": 3,
+      "outfit_id": "outfit_123_c",
+      "overall_score": 0.78,
+      "confidence": 0.75,
+      "items": [
+        {
+          "role": "top",
+          "item_id": "item_38",
+          "title": "黑色簡約T恤",
+          "color": "black",
+          "style": "casual",
+          "material": "cotton",
+          "match_score": 0.82,
+          "image_url": "https://example.com/item_38.jpg"
+        },
+        {
+          "role": "bottom",
+          "item_id": "item_65",
+          "title": "白色棉質休閒褲",
+          "color": "white",
+          "style": "casual",
+          "material": "cotton",
+          "match_score": 0.80,
+          "image_url": "https://example.com/item_65.jpg"
+        },
+        {
+          "role": "shoes",
+          "item_id": "item_91",
+          "title": "黑色運動鞋",
+          "color": "black",
+          "style": "sporty",
+          "material": "canvas",
+          "match_score": 0.75,
+          "image_url": "https://example.com/item_91.jpg"
+        }
+      ],
+      "suitability": {
+        "temp_ok": true,
+        "weather_ok": true,
+        "occasion_ok": true,
+        "weather_explanation": "經典黑白搭配簡約百搭，運動鞋提供舒適度"
+      },
+      "reasons": [
+        "• 黑白經典配色永遠不出錯，簡潔俐落",
+        "• 休閒T恤搭配白色褲子，輕鬆隨性又時尚",
+        "• 黑色運動鞋增添運動感，舒適度一流"
+      ],
+      "accessory_suggestions": [
+        "簡約黑色背包",
+        "銀色運動手錶"
+      ],
+      "color_harmony": {
+        "harmony_score": 0.88,
+        "notes": "經典黑白配色是時尚永恆之選，高對比度顯身材"
+      },
+      "visual_preview_url": "https://example.com/preview/outfit_123_c.png"
+    }
+  ],
+  "metadata": {
+    "retrieval_time_ms": 45,
+    "ranking_time_ms": 120,
+    "llm_time_ms": 890,
+    "total_time_ms": 1055,
+    "candidates_retrieved": 50,
+    "candidates_assembled": 125,
+    "llm_model": "gpt-3.5-turbo",
+    "ranking_model": "lightgbm_v1"
+  },
+  "exposure_control": {
+    "max_recommendations": 3,
+    "diversity_penalty": 0.15,
+    "freshness_weight": 0.1
+  }
+}
