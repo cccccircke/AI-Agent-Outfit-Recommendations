@@ -218,6 +218,59 @@ class CatalogLoaderV2:
         
         results.sort(key=lambda x: x[1], reverse=True)
         return results[:top_k]
+
+    def filter_metadata(
+        self,
+        context: Dict[str, Any],
+        candidates: List[Tuple[Dict[str, Any], float]]
+    ) -> List[Tuple[Dict[str, Any], float]]:
+        """Apply hard metadata filtering rules before higher-level reasoning.
+
+        Rules implemented:
+        - If temperature > 28°C: filter out items with material containing 'wool' or
+          category equal to 'Coat' or 'Outerwear'.
+        - If occasion.type indicates swimming ("Swimming", "Beach-Swim", etc.):
+          keep only items with category 'Swimwear'.
+        - Gender/occasion rules can be extended here.
+
+        Returns filtered list preserving original order and scores.
+        """
+        if not candidates:
+            return candidates
+
+        weather = context.get("weather", {})
+        temp = weather.get("temperature_c", None)
+        occasion = context.get("occasion", {})
+        occ_type = occasion.get("type", "").lower()
+
+        filtered = []
+
+        for item, score in candidates:
+            cat = str(item.get("category", "")).lower()
+            material = str(item.get("material", "")).lower()
+
+            # Swimming occasion: only keep swimwear
+            if "swim" in occ_type:
+                if cat in ["swimwear", "swimsuit"]:
+                    filtered.append((item, score))
+                else:
+                    # drop
+                    continue
+
+            # Temperature-based hard filters
+            if temp is not None and temp > 28:
+                # Filter out wool and heavy coats
+                if "wool" in material or cat in ["coat", "outerwear"]:
+                    continue
+
+            # If passes filters, keep
+            filtered.append((item, score))
+
+        # If filtering removed everything, fallback to original candidates
+        if not filtered:
+            return candidates
+
+        return filtered
     
     def search_by_attributes(
         self,

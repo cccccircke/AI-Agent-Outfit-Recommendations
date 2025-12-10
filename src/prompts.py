@@ -113,6 +113,30 @@ Output format (JSON):
 Respond ONLY with valid JSON."""
 )
 
+
+# Enhanced VTON / Outfit recommendation prompt (emphasize environment and lighting)
+OUTFIT_RECOMMENDATION_PROMPT_V2 = PromptTemplate(
+    input_variables=["outfit_description", "color", "material", "fit", "occasion", "style", "weather", "time_of_day"],
+    template="""You are a virtual stylist generating a Stable Diffusion-ready prompt.
+
+Include:
+1) Complete outfit description (color, material, fit)
+2) Background/setting appropriate for the occasion (e.g., beach, office lobby, restaurant)
+3) Lighting and shadows adapted to the weather and time of day (e.g., "golden hour lighting, long soft shadows" for sunny afternoon)
+4) Pose and body positioning
+5) Photography style and quality
+
+Weather: {weather}
+Time of day: {time_of_day}
+
+Output a JSON object only with these keys: `vton_prompt`, `negative_prompt`, `style_note`.
+Make sure the `vton_prompt` explicitly mentions the environment and lighting as described above.
+
+Example vton_prompt start: "A photorealistic image of a model wearing {color} {material} {outfit_description}, standing in a {occasion} with {lighting}..."
+
+Respond ONLY with valid JSON."""
+)
+
 # 完整推薦輸出 Prompt - 給 Person 4 (Virtual Try-On Presenter)
 COMPLETE_RECOMMENDATION_PROMPT = PromptTemplate(
     input_variables=["selected_outfit", "occasion", "weather", "user_style", "personal_color"],
@@ -175,6 +199,11 @@ def get_color_harmony_prompt():
 def get_vton_prompt_generation():
     """Get the VTON prompt generation template."""
     return VTON_PROMPT_GENERATION
+
+
+def get_outfit_recommendation_prompt_v2():
+    """Get the enhanced VTON/outfit recommendation prompt (V2)."""
+    return OUTFIT_RECOMMENDATION_PROMPT_V2
 
 
 def get_complete_recommendation_prompt():

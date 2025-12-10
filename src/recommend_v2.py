@@ -96,27 +96,80 @@ class OutfitRecommenderV2:
         
         # 2. RETRIEVE: Get candidate outfits via hybrid search
         candidates = self._retrieve_candidates(context, top_k)
+
+        # Hard metadata filtering before thinking/LLM
+        try:
+            candidates = self.catalog_loader.filter_metadata(context, candidates)
+        except Exception:
+            # If filtering fails for any reason, continue with original candidates
+            pass
         
         if not candidates:
             return self._create_empty_output(context)
         
         # 3. THINK: Score and select best outfit
         selected_item, score = self._think_and_select(context, candidates)
+
+        # 3.5 COMPOSITION: if the selected item is a Top/Upper, try to find a Bottom to form a full outfit
+        composed_pair = None
+        selected_category = (selected_item.get("category", "") or "").lower()
+        if selected_category in ["upper", "top", "topwear"]:
+            bottom = self._find_matching_bottom(selected_item, context)
+            if bottom:
+                composed_pair = {
+                    "top": selected_item,
+                    "bottom": bottom
+                }
         
         # 4. GENERATE: Create reasoning and VTON prompt
-        reasoning = self._generate_reasoning(context, selected_item)
-        vton_prompt = self._generate_vton_prompt(context, selected_item)
+        # If composed_pair exists, generate combined reasoning and prompt
+        if composed_pair:
+            reasoning = self._generate_reasoning(context, composed_pair["top"]) + (
+                "\n搭配建議：" + composed_pair["bottom"].get("complete_description", "")
+            )
+            vton_prompt = self._generate_vton_prompt_for_pair(context, composed_pair["top"], composed_pair["bottom"])
+        else:
+            reasoning = self._generate_reasoning(context, selected_item)
+            vton_prompt = self._generate_vton_prompt(context, selected_item)
         
         # 5. Package output for Part 4
-        output = RecommendationOutput(
-            task_id=f"recommendation_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
-            selected_outfit={
+        # Build selected_outfit dict - support both single items and composed pairs
+        if composed_pair:
+            selected_outfit_dict = {
+                "filename": f"{self._extract_filename(composed_pair['top'])} + {self._extract_filename(composed_pair['bottom'])}",
+                "category": f"{selected_item.get('category', '')} + {composed_pair['bottom'].get('category', '')}",
+                "color": f"{selected_item.get('color_primary', '')} / {composed_pair['bottom'].get('color_primary', '')}",
+                "material": f"{selected_item.get('material', '')} + {composed_pair['bottom'].get('material', '')}",
+                "description": selected_item.get("complete_description", ""),
+                "components": {
+                    "top": {
+                        "filename": self._extract_filename(selected_item),
+                        "category": selected_item.get("category", ""),
+                        "color": selected_item.get("color_primary", ""),
+                        "material": selected_item.get("material", ""),
+                        "description": selected_item.get("complete_description", "")
+                    },
+                    "bottom": {
+                        "filename": self._extract_filename(composed_pair["bottom"]),
+                        "category": composed_pair["bottom"].get("category", ""),
+                        "color": composed_pair["bottom"].get("color_primary", ""),
+                        "material": composed_pair["bottom"].get("material", ""),
+                        "description": composed_pair["bottom"].get("complete_description", "")
+                    }
+                }
+            }
+        else:
+            selected_outfit_dict = {
                 "filename": self._extract_filename(selected_item),
                 "category": selected_item.get("category", ""),
                 "color": selected_item.get("color_primary", ""),
                 "material": selected_item.get("material", ""),
                 "description": selected_item.get("complete_description", "")
-            },
+            }
+        
+        output = RecommendationOutput(
+            task_id=f"recommendation_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+            selected_outfit=selected_outfit_dict,
             reasoning_log=reasoning,
             vton_generation_prompt=vton_prompt,
             alternative_candidates=[
@@ -363,6 +416,82 @@ class OutfitRecommenderV2:
             return f"{item['item_id']}.jpg"
         
         return "outfit.jpg"
+
+    def _find_matching_bottom(self, top_item: Dict[str, Any], context: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Find a matching bottom (Lower) for the given top_item using catalog attributes.
+
+        Heuristics:
+        - Try to find Bottom with same color or complementary neutral
+        - Prefer same style_aesthetic
+        - Use search_by_attributes to filter by category='Lower' and color
+        """
+        top_color = (top_item.get("color_primary", "") or "").lower()
+        top_style = (top_item.get("style_aesthetic", "") or "").lower()
+
+        # First try exact color match
+        candidates = self.catalog_loader.search_by_attributes(color=top_color, category="Lower", top_k=5)
+        if candidates:
+            # Prefer same style
+            for c in candidates:
+                if (c.get("style_aesthetic", "") or "").lower() == top_style:
+                    return c
+            return candidates[0]
+
+        # If no exact color match, try any Lower and pick one by style or neutral color
+        all_lowers = self.catalog_loader.search_by_attributes(category="Lower", top_k=10)
+        if not all_lowers:
+            return None
+
+        # Prefer same style
+        for c in all_lowers:
+            if (c.get("style_aesthetic", "") or "").lower() == top_style:
+                return c
+
+        # Fallback: pick first neutral colored bottom (black/navy/white/gray)
+        neutrals = ["black", "navy", "white", "gray", "grey", "beige"]
+        for c in all_lowers:
+            color = (c.get("color_primary", "") or "").lower()
+            if any(n in color for n in neutrals):
+                return c
+
+        # Last resort: return first lower
+        return all_lowers[0]
+
+
+    def _generate_vton_prompt_for_pair(self, context: Dict[str, Any], top: Dict[str, Any], bottom: Dict[str, Any]) -> str:
+        """Generate a Stable Diffusion prompt for a composed outfit (top + bottom)."""
+        weather = context.get("weather", {})
+        occasion = context.get("occasion", {})
+
+        # Outfit description
+        top_desc = top.get("complete_description", "top")
+        bottom_desc = bottom.get("complete_description", "bottom")
+        color_top = top.get("color_primary", "neutral")
+        color_bottom = bottom.get("color_primary", "neutral")
+        material_top = top.get("material", "fabric")
+        material_bottom = bottom.get("material", "fabric")
+        style = top.get("style_aesthetic", bottom.get("style_aesthetic", "elegant"))
+
+        # Environment and lighting
+        condition = weather.get("condition", "natural").lower()
+        location = occasion.get("location", "indoor")
+        if "sunny" in condition:
+            lighting = "golden hour lighting, sunny day, warm natural light"
+        elif "cloudy" in condition:
+            lighting = "soft diffused lighting, overcast day, gentle daylight"
+        elif "rain" in condition:
+            lighting = "cool ambient lighting, rainy atmosphere, moody lighting"
+        else:
+            lighting = "professional studio lighting, warm natural light"
+
+        prompt = (
+            f"A photorealistic image of an elegant woman wearing a {color_top} {material_top} {top_desc} "
+            f"paired with a {color_bottom} {material_bottom} {bottom_desc}. "
+            f"She is posed naturally in a {location}, {style} style, {lighting}, "
+            f"professional photography, cinematic composition, ultra high quality, 8k resolution, detailed fabric texture, natural skin texture, masterpiece"
+        )
+
+        return prompt
     
     def _create_empty_output(self, context: Dict[str, Any]) -> RecommendationOutput:
         """Create a fallback output when no candidates found."""
