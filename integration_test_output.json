@@ -1,0 +1,75 @@
+{
+  "status": "success",
+  "timestamp": "2025-01-01T00:00:00",
+  "recommended_outfits": [
+    {
+      "rank": 1,
+      "score": 0.7,
+      "confidence": 0.7,
+      "items": {
+        "top": "top_01",
+        "bottom": "bottom_01",
+        "shoes": "shoes_01"
+      },
+      "colors": {
+        "primary": "gray",
+        "secondary": "white"
+      },
+      "explanation": "Fallback recommendation #1",
+      "accessories": [],
+      "metadata": {
+        "style": "",
+        "occasion_fit": "",
+        "weather_fit": ""
+      }
+    },
+    {
+      "rank": 2,
+      "score": 0.6499999999999999,
+      "confidence": 0.6499999999999999,
+      "items": {
+        "top": "top_01",
+        "bottom": "bottom_01",
+        "shoes": "shoes_01"
+      },
+      "colors": {
+        "primary": "gray",
+        "secondary": "white"
+      },
+      "explanation": "Fallback recommendation #2",
+      "accessories": [],
+      "metadata": {
+        "style": "",
+        "occasion_fit": "",
+        "weather_fit": ""
+      }
+    },
+    {
+      "rank": 3,
+      "score": 0.6,
+      "confidence": 0.6,
+      "items": {
+        "top": "top_01",
+        "bottom": "bottom_01",
+        "shoes": "shoes_01"
+      },
+      "colors": {
+        "primary": "gray",
+        "secondary": "white"
+      },
+      "explanation": "Fallback recommendation #3",
+      "accessories": [],
+      "metadata": {
+        "style": "",
+        "occasion_fit": "",
+        "weather_fit": ""
+      }
+    }
+  ],
+  "next_steps": [
+    "1. User selects outfit from top 3",
+    "2. Step 4 loads item images from Google Drive",
+    "3. Virtual try-on visualization",
+    "4. Feedback to Step 3 (acceptance/rejection)"
+  ]
+}

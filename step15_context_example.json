@@ -1,0 +1,59 @@
+{
+  "user_id": "user_demo",
+  "date_time": "2025-12-10T11:07:51.527531",
+  "location": "taipei",
+  "palette_analysis": {
+    "dominant_colors": [
+      "white",
+      "navy",
+      "beige"
+    ],
+    "seasonal_palette": "summer",
+    "skin_tone": "neutral",
+    "undertone": "cool"
+  },
+  "weather": {
+    "temp_c": 20,
+    "humidity": 60,
+    "condition": "sunny",
+    "uv_index": 8,
+    "wind_speed_kmh": 10
+  },
+  "preferences": {
+    "styles": [
+      "minimalist",
+      "professional"
+    ],
+    "colors": [
+      "white",
+      "navy",
+      "beige"
+    ],
+    "avoid": [
+      "neon",
+      "bright_patterns"
+    ],
+    "fit_pref": "regular"
+  },
+  "occasion": [
+    "work",
+    "coffee_meeting"
+  ],
+  "itinerary": [
+    {
+      "time": "09:00",
+      "activity": "office_work",
+      "location": "office"
+    },
+    {
+      "time": "14:00",
+      "activity": "coffee_meeting",
+      "location": "cafe"
+    }
+  ],
+  "demographics": {
+    "age": 28,
+    "gender": "female"
+  },
+  "last_worn_history": []
+}
