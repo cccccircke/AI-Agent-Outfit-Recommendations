@@ -1,0 +1,67 @@
+{
+  "scenario": "beach_wedding",
+  "input_context": {
+    "user_id": "user_beach_001",
+    "timestamp": "2025-12-10T13:07:12.368590",
+    "user_query": "週末要去海邊參加婚禮，需要優雅但輕盈的裝扮",
+    "weather": {
+      "temperature_c": 28,
+      "condition": "Sunny",
+      "humidity_percent": 75,
+      "description": "晴天，海風明顯，紫外線強"
+    },
+    "user_profile": {
+      "gender": "Female",
+      "age": 32,
+      "personal_color": "Summer Soft",
+      "color_preferences": [
+        "淡藍",
+        "薄荷綠",
+        "米色",
+        "珍珠白"
+      ],
+      "dislike_colors": [
+        "深色",
+        "冷色"
+      ],
+      "style_preferences": [
+        "優雅",
+        "簡約",
+        "浪漫"
+      ],
+      "dislike_styles": [
+        "運動風",
+        "厚重"
+      ],
+      "body_type": "Hourglass",
+      "fit_preferences": [
+        "修身",
+        "傘形"
+      ]
+    },
+    "occasion": {
+      "type": "海邊婚禮賓客",
+      "location": "海灘",
+      "formality": "半正式",
+      "time_of_day": "下午",
+      "dress_code": "優雅休閒"
+    },
+    "constraints": {
+      "max_temperature": 35,
+      "breathable": true,
+      "avoid_heavy_materials": true,
+      "sun_protection": true
+    }
+  },
+  "output_recommendation": {
+    "selected_outfit_filename": "49.jpg",
+    "selected_outfit_id": "outfit_49",
+    "reasoning": "採用Knit/Wool Blend材質，透氣舒適，適合高溫天氣。服裝等級與場合相符（海邊婚禮賓客）。",
+    "vton_prompt": "A photorealistic image of an elegant woman wearing a Beige/Cream/Yellow Knit/Wool Blend This is a cropped, button-front cardigan in a light beige base color with a brown and light blue Argyle pattern, finished with solid brown trim on the cuffs, hem, and neckline. (Relaxed silhouette, Preppy, Vintage, Academic style), standing gracefully on a 海灘, sunny lighting, professional photography, cinematic, ultra high quality, detailed facial features, natural skin, soft lighting",
+    "negative_prompt": "ugly, distorted, blurry, low quality, amateur, unfinished, oversaturated, poorly lit, wrong proportions, deformed",
+    "confidence_score": 0.14285714285714285,
+    "fashion_notes": "完美詮釋您的Summer Soft色彩季型。Relaxed剪裁修飾Hourglass身材。得體展現半正式場合的優雅氣質。",
+    "generated_at": "2025-12-10T13:07:12.369159"
+  },
+  "description": "Complete example of input from Person 2 and output for Person 4"
+}

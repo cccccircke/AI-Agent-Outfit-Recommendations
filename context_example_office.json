@@ -1,0 +1,52 @@
+{
+  "user_id": "user_office_001",
+  "timestamp": "2025-12-10T13:07:12.356577",
+  "user_query": "Important client meeting today, need professional and polished look",
+  "weather": {
+    "temperature_c": 18,
+    "condition": "Cloudy",
+    "humidity_percent": 60,
+    "description": "Autumn, cool but not cold"
+  },
+  "user_profile": {
+    "gender": "Female",
+    "age": 35,
+    "personal_color": "Autumn Deep",
+    "color_preferences": [
+      "burgundy",
+      "navy",
+      "camel",
+      "cream"
+    ],
+    "dislike_colors": [
+      "bright pink",
+      "neon"
+    ],
+    "style_preferences": [
+      "Professional",
+      "Minimalist",
+      "Elegant"
+    ],
+    "dislike_styles": [
+      "Casual",
+      "Sporty"
+    ],
+    "body_type": "Pear",
+    "fit_preferences": [
+      "Tailored",
+      "Straight"
+    ]
+  },
+  "occasion": {
+    "type": "Business Meeting",
+    "location": "Office",
+    "formality": "Formal",
+    "time_of_day": "Morning",
+    "dress_code": "Business Professional"
+  },
+  "constraints": {
+    "min_temperature": 15,
+    "professionalism": true,
+    "wrinkle_resistant": true
+  }
+}

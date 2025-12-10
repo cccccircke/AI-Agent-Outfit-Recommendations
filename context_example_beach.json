@@ -1,0 +1,53 @@
+{
+  "user_id": "user_beach_001",
+  "timestamp": "2025-12-10T13:07:12.356361",
+  "user_query": "週末要去海邊參加婚禮，需要優雅但輕盈的裝扮",
+  "weather": {
+    "temperature_c": 28,
+    "condition": "Sunny",
+    "humidity_percent": 75,
+    "description": "晴天，海風明顯，紫外線強"
+  },
+  "user_profile": {
+    "gender": "Female",
+    "age": 32,
+    "personal_color": "Summer Soft",
+    "color_preferences": [
+      "淡藍",
+      "薄荷綠",
+      "米色",
+      "珍珠白"
+    ],
+    "dislike_colors": [
+      "深色",
+      "冷色"
+    ],
+    "style_preferences": [
+      "優雅",
+      "簡約",
+      "浪漫"
+    ],
+    "dislike_styles": [
+      "運動風",
+      "厚重"
+    ],
+    "body_type": "Hourglass",
+    "fit_preferences": [
+      "修身",
+      "傘形"
+    ]
+  },
+  "occasion": {
+    "type": "海邊婚禮賓客",
+    "location": "海灘",
+    "formality": "半正式",
+    "time_of_day": "下午",
+    "dress_code": "優雅休閒"
+  },
+  "constraints": {
+    "max_temperature": 35,
+    "breathable": true,
+    "avoid_heavy_materials": true,
+    "sun_protection": true
+  }
+}
