@@ -83,6 +83,69 @@ Return JSON:
 Respond ONLY with valid JSON."""
 )
 
+# VTON (Virtual Try-On) Prompt 生成 - 這是關鍵的新 Prompt
+VTON_PROMPT_GENERATION = PromptTemplate(
+    input_variables=["outfit_description", "color", "material", "fit", "occasion", "style"],
+    template="""Generate a detailed Stable Diffusion/AI image generation prompt for virtual try-on of this outfit.
+
+Outfit Details:
+- Description: {outfit_description}
+- Color: {color}
+- Material: {material}
+- Fit: {fit}
+- Occasion: {occasion}
+- Style: {style}
+
+Create a photorealistic prompt that includes:
+1. Detailed outfit description
+2. Body positioning and pose
+3. Setting/background appropriate for the occasion
+4. Lighting conditions
+5. Photography style and quality
+
+Output format (JSON):
+{{
+    "vton_prompt": "A photorealistic image of a model wearing [complete outfit description], [pose], [background], [lighting], [photo quality]",
+    "negative_prompt": "ugly, distorted, blurry, low quality, amateur, unfinished",
+    "style_note": "[brief note about how the outfit expresses the desired style]"
+}}
+
+Respond ONLY with valid JSON."""
+)
+
+# 完整推薦輸出 Prompt - 給 Person 4 (Virtual Try-On Presenter)
+COMPLETE_RECOMMENDATION_PROMPT = PromptTemplate(
+    input_variables=["selected_outfit", "occasion", "weather", "user_style", "personal_color"],
+    template="""You are a fashion AI assistant. Create a complete outfit recommendation in JSON format for virtual try-on presentation.
+
+Selected Outfit:
+{selected_outfit}
+
+User Context:
+- Occasion: {occasion}
+- Weather: {weather}
+- Style preferences: {user_style}
+- Personal color: {personal_color}
+
+Generate:
+1. A clear reasoning explanation (why this outfit is perfect)
+2. A detailed VTON prompt for image generation
+3. Key fashion insights
+
+Output format (JSON):
+{{
+    "selected_outfit_id": "...",
+    "selected_outfit_filename": "...",
+    "reasoning": "...",
+    "vton_prompt": "...",
+    "negative_prompt": "...",
+    "fashion_notes": "...",
+    "confidence_score": 0.0-1.0
+}}
+
+Respond ONLY with valid JSON, ensure Traditional Chinese for reasoning if needed."""
+)
+
 
 def get_explain_outfit_prompt():
     """Get the main outfit explanation prompt."""
@@ -107,3 +170,13 @@ def get_weather_check_prompt():
 def get_color_harmony_prompt():
     """Get the color harmony prompt."""
     return COLOR_HARMONY_PROMPT
+
+
+def get_vton_prompt_generation():
+    """Get the VTON prompt generation template."""
+    return VTON_PROMPT_GENERATION
+
+
+def get_complete_recommendation_prompt():
+    """Get the complete recommendation output prompt for Person 4."""
+    return COMPLETE_RECOMMENDATION_PROMPT
