@@ -100,7 +100,7 @@ ITEM_SCHEMA = {
         },
         "available": {
             "type": "boolean",
-            "default": true,
+            "default": True,
             "description": "In-stock status"
         },
         "image_url": {
@@ -396,7 +396,7 @@ RECOMMENDATION_REQUEST_SCHEMA = {
         },
         "use_llm": {
             "type": "boolean",
-            "default": false,
+            "default": False,
             "description": "Enable LLM-powered explanations"
         }
     },
