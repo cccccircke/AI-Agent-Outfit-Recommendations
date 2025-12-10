@@ -1,6 +1,20 @@
 # AI-Agent-Outfit-Recommendations
 
-Prototype for Outfit Planner (Step 3) using FAISS + LightGBM + OpenAI LLM with LangChain-style prompts.
+**Step 3: Outfit Planner** for a 4-step AI outfit recommendation system.
+
+Combines FAISS retrieval, LightGBM ranking, and OpenAI LLM explanations to generate personalized outfit recommendations based on weather, occasion, and color preferences.
+
+### Complete 4-Step System
+
+```
+Step 1: Catalog Builder
+  ↓ (outfit_descriptions.json)
+Step 1.5: Personal Style + Context Collector
+  ↓ (palette_analysis + weather + occasion)
+Step 3: Outfit Planner (THIS PROJECT) ⭐
+  ↓ (top-3 outfit recommendations)
+Step 4: Virtual Try-On Presenter
+```
 
 ## Quick Start
 
@@ -111,10 +125,54 @@ model.joblib            # Trained LightGBM model (auto-generated)
 
 ## Next Steps
 
-- Replace synthetic data with real clothing catalog (images + metadata)
-- Integrate CLIP embeddings for visual similarity
-- Collect user feedback (implicit via clicks/purchases, explicit via ratings) to improve ranking model
-- Add A/B testing framework for model iteration
+### Immediate (For Integration)
+
+1. **Step 1 Integration**
+   - Download outfit catalog from [BDA_Final_Project_114-1](https://github.com/beyondderrscene/BDA_Final_Project_114-1)
+   - Test `src/data_loader.py` with real `outfit_descriptions.json`
+   - Replace synthetic data with actual clothing catalog
+
+2. **Step 1.5 Integration**
+   - Use `src/context_generator.py` to create user context from color analysis + weather + occasion
+   - Integrate with actual weather API
+   - Collect real color analysis results (skin tone, undertone, palette)
+
+3. **Step 4 Interface**
+   - Review `examples/STEP4_INTERFACE.md` for complete API specification
+   - Implement virtual try-on using Step 3 output format
+   - Set up image loading from Google Drive (item_id → image_url mapping)
+
+### Running Integration Test
+
+```bash
+# Run end-to-end test (Step 1 → Step 3 → Step 4)
+python -m src.integration_test
+
+# With real Step 1 data
+python -m src.integration_test --step1-path /path/to/outfit_descriptions.json
+
+# With LLM explanations
+python -m src.integration_test --with-llm
+```
+
+### Model Training & Deployment
+
+- See `examples/DEPLOYMENT_PLAN.md` for complete launch checklist
+- `examples/EVALUATION_GUIDE.md` has offline metrics (NDCG, Precision, MAP)
+- Target metrics: NDCG > 0.70, CTR > 10%, Acceptance Rate > 15%
+
+## Testing & Validation
+
+```bash
+# Validate JSON schemas
+python -m examples.schema_validation_example
+
+# Run evaluation with sample data
+python -m src.evaluate_example
+
+# Test with specific context
+python src/context_generator.py
+```
 - Deploy as REST API (FastAPI/Flask) for frontend integration
 - Implement caching layer (Redis) for frequently-requested contexts
 
