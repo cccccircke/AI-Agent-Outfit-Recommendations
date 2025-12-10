@@ -257,6 +257,28 @@ print(result)
 "
 ```
 
+### 📁 Example Input/Output Files
+
+For reference and testing, generated example files are available in `examples/input_output/`:
+
+- **`examples/input_output/complete_example_input_output.json`** - Full input/output pair (beach wedding scenario)
+- **`examples/input_output/context_example_beach.json`** - Person 2 input example (beach wedding)
+- **`examples/input_output/context_example_office.json`** - Person 2 input example (office meeting)
+- **`examples/input_output/integration_test_output.json`** - Full integration test output with multiple recommendations
+- **`examples/input_output/catalog_for_step3.json`** - Sample Person 1 catalog (200 synthetic items)
+
+**Quickest way to inspect examples:**
+```bash
+# View complete input/output example
+cat examples/input_output/complete_example_input_output.json | python -m json.tool
+
+# View Person 2 input format (beach scenario)
+cat examples/input_output/context_example_beach.json | python -m json.tool
+
+# View Person 4 output format (integration test)
+cat examples/input_output/integration_test_output.json | python -m json.tool
+```
+
 ## Notes
 
 - LLM calls require internet connection and active OpenAI account
